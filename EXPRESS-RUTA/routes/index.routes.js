@@ -1,10 +1,8 @@
-import ejemplo from "./ejemplo.routes.js";
 import { Router } from "express";
+import cripto from "./cripto.routes.js";
+
 const indexRoutes = Router();
 
-indexRoutes.use('/ejemplo', ejemplo);
-
-
-
+indexRoutes.use('/cripto', cripto);
 
 export default indexRoutes;

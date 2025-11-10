@@ -1,43 +1,42 @@
 import mongoose from 'mongoose';
 
-let isConectedJohnny = false;
+let isConnectedCripto = false;
 
-const conectarMongoDBJ = async () => {
-    if (isConectedJohnny) {
-        console.log("Ya esta conectada la base de datos señor Tenorio".yellow);
-        return;
-    }
+const conectarMongoDBCripto = async () => {
+  if (isConnectedCripto) {
+    console.log("Ya está conectada la base de datos".yellow);
+    return;
+  }
 
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        isConectedJohnny = true;
-        console.log('Conectado a la BD señor Tenorio'.bgGreen);
-    } catch (error) {
-        console.log("Error al conectar a la BD".red);
-    }
-}
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    isConnectedCripto = true;
+    console.log('Conectado a MongoDB Atlas (Criptomonedas)'.bgGreen);
+  } catch (error) {
+    console.log("Error al conectar a la BD".red);
+  }
+};
 
 const db = mongoose.connection;
 
-db.on('error', (error) => {
-    isConectedJohnny = false;
-    console.log('Error al conectar a MongoDB'.red);
+db.on('error', () => {
+  isConnectedCripto = false;
+  console.log('Error al conectar a MongoDB'.red);
 });
 
 db.once('open', () => {
-    isConectedJohnny = true;
+  isConnectedCripto = true;
 });
 
-db.on('disconnected', ()=>{
-    isConectedJohnny = false;
-    console.log('Desconectado de MongoDB'.yellow);
+db.on('disconnected', () => {
+  isConnectedCripto = false;
+  console.log('Desconectado de MongoDB'.yellow);
 });
 
-process.on('SIGINT', async ()=>{
-    await mongoose.connection.close();
-    console.log('MongoDB se ha desconectado'.yellow);
-    process.exit(0);
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB se ha desconectado'.yellow);
+  process.exit(0);
 });
 
-export {conectarMongoDBJ, isConectedJohnny};
-
+export { conectarMongoDBCripto, isConnectedCripto };
