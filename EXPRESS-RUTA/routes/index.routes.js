@@ -1,8 +1,10 @@
 import { Router } from "express";
-import cripto from "./cripto.routes.js";
+import carritoRoutes from "./carrito.routes.js";
+import cotizacionRoutes from "./cotizacion.routes.js";
 
-const indexRoutes = Router();
+const router = Router();
 
-indexRoutes.use('/cripto', cripto);
+router.use("/carrito", carritoRoutes);
+router.use("/cotizacion", cotizacionRoutes);
 
-export default indexRoutes;
+export default router;

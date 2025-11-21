@@ -1,41 +1,40 @@
-import express from 'express';
-import cors from 'cors';
-import indexRoutes from '../routes/index.routes.js';
-import * as db from '../db/conexion.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
-export default class Server {
-  constructor() {
-    this.app = express();
-    this.port = process.env.PORT || 3000;
-    this.apiPath = '/api/';
+import { conectarMongoDB } from "../db/cnn_mongodb.js";
+import indexRoutes from "../routes/index.routes.js";
 
-    this.conectarDBMongo();
-    this.middlewares();
-    this.routes();
-  }
+class Server {
+    constructor() {
+        this.app = express();
+        this.port = process.env.PORT || 9000;
 
-  async conectarDBMongo() {
-    if (!db.isConnectedCripto) {
-      await db.conectarMongoDBCripto();
+        this.middlewares();
+        this.routes();
+        this.dbConnection();
     }
-  }
 
-  middlewares() {
-    this.app.use(cors());
-    this.app.use(express.json());
-    this.app.use(express.static('public'));
-  }
+    middlewares() {
+        this.app.use(cors());
+        this.app.use(express.json());
+        this.app.use(express.static("public")); // para JS, CSS, imágenes
+    }
 
-  routes() {
-    this.app.use(this.apiPath, indexRoutes);
-    this.app.use((req, res) => {
-      res.status(404).json({ msg: 'Ruta no encontrada' });
-    });
-  }
+    routes() {
+        this.app.use("/api", indexRoutes);
+    }
 
-  listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Servidor corriendo en puerto ${this.port}`.bgBlack);
-    });
-  }
+    async dbConnection() {
+        await conectarMongoDB();
+    }
+
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Servidor corriendo en puerto ${this.port}`);
+        });
+    }
 }
+
+export default Server;
